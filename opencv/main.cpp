@@ -1,41 +1,50 @@
 #include <cstring>
+#include <iostream>
+#include <vector>
 
 #include "opencv2/highgui.hpp"
 #include "opencv2/objdetect.hpp"
 #include "opencv2/imgproc.hpp"
 
+using namespace std;
 using namespace cv;
 
 int main(int arg_c, char** arg_v) {
-	// Video capture parameters
-	VideoCapture capture(0);
-	Mat frame;
+	if (arg_c == 1) {
+		cout << "Usage: ./Playground -c n ... -r (optional)" << endl;
+		return 0;
+	}
 
-	capture >> frame;
-
-	// Video record parameters
+	vector<VideoCapture> caps;
+	vector<VideoWriter> writers;
+	vector<string> files;
+	vector<Mat> frames;
 	bool record = false;
-	string file;
-	VideoWriter writer;
 
 	for (int i = 0; i < arg_c; i++) {
-		if (arg_v[i] == "-r" && arg_c > i + 1) {
+		if (strcmp(arg_v[i], "-r") == 0) {
 			record = true;
-			file = arg_v[i + 1];
+		}
+		else if (strcmp(arg_v[i], "-c") == 0 && arg_c > ++i) {
+			for (int j = 0; j < atoi(arg_v[i++]); j++) {
+				caps.push_back(VideoCapture(atoi(arg_v[i + j])));
+				files.push_back("save" + to_string(j) + ".avi");
+				writers.push_back(VideoWriter(files[j], CV_FOURCC('M', 'J', 'P', 'G'), 60, Size(caps[j].get(CV_CAP_PROP_FRAME_WIDTH), caps[j].get(CV_CAP_PROP_FRAME_HEIGHT)), true));
+				frames.push_back(Mat());
+			}
 		}
 	}
 
-	writer = VideoWriter(file, CV_FOURCC('M', 'P', '4', '2'), 30, Size(frame.cols, frame.rows), true);
+	cout << caps.size() << endl;
 
-	if (!capture.isOpened()) {
-		return -1;
-	}
+	while (true) {
+		for (int i = 0; i < caps.size(); i++) {
+			caps[i] >> frames[i];
+			imshow("Frame" + to_string(i), frames[i]);
 
-	while (capture.read(frame)) {
-		imshow("Frame", frame);
-
-		if (record) {
-			writer.write(frame);
+			if (record) {
+				writers[i].write(frames[i]);
+			}
 		}
 
 		if (char(waitKey(10)) == 27) {
