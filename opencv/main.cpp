@@ -19,6 +19,8 @@ int main(int arg_c, char** arg_v) {
 	vector<VideoWriter> writers;
 	vector<string> files;
 	vector<Mat> frames;
+
+	bool stream = true;
 	bool record = false;
 
 	for (int i = 0; i < arg_c; i++) {
@@ -33,6 +35,9 @@ int main(int arg_c, char** arg_v) {
 				frames.push_back(Mat());
 			}
 		}
+		else if (strcmp(arg_v[i], "-s") == 0) {
+			stream = true;
+		}
 	}
 
 	cout << caps.size() << endl;
@@ -40,7 +45,10 @@ int main(int arg_c, char** arg_v) {
 	while (true) {
 		for (int i = 0; i < caps.size(); i++) {
 			caps[i] >> frames[i];
-			imshow("Frame" + to_string(i), frames[i]);
+
+			if (stream) {
+				imshow("Frame" + to_string(i), frames[i]);
+			}
 
 			if (record) {
 				writers[i].write(frames[i]);
