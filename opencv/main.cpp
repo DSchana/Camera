@@ -20,7 +20,7 @@ int main(int arg_c, char** arg_v) {
 	vector<string> files;
 	vector<Mat> frames;
 
-	bool stream = true;
+	bool stream = false;
 	bool record = false;
 
 	for (int i = 0; i < arg_c; i++) {
