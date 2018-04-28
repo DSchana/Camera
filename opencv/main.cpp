@@ -30,7 +30,7 @@ int main(int arg_c, char** arg_v) {
 		else if (strcmp(arg_v[i], "-c") == 0 && arg_c > ++i) {
 			for (int j = 0; j < atoi(arg_v[i++]); j++) {
 				caps.push_back(VideoCapture(atoi(arg_v[i + j])));
-				files.push_back("save" + to_string(j) + ".avi");
+				files.push_back("save" + to_string(j) + ".mjpg");
 				writers.push_back(VideoWriter(files[j], CV_FOURCC('M', 'J', 'P', 'G'), 60, Size(caps[j].get(CV_CAP_PROP_FRAME_WIDTH), caps[j].get(CV_CAP_PROP_FRAME_HEIGHT)), true));
 				frames.push_back(Mat());
 			}
