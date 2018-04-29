@@ -32,9 +32,6 @@ int main(int arg_c, char** arg_v) {
 				cout << "Trying Cam " << arg_v[i + j] << "..." << endl;
 				VideoCapture cap(atoi(arg_v[i + j]));
 
-				cap.set(CV_CAP_PROP_FRAME_WIDTH, 850);
-				cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
-
 				if (!cap.isOpened()) {
 					cout << "Failed to open camera " << arg_v[i + j] << endl;
 					continue;
