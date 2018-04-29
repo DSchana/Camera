@@ -41,7 +41,7 @@ int main(int arg_c, char** arg_v) {
 
 				caps.push_back(cap);
 				files.push_back("save" + to_string(j - 1) + ".avi");
-				writers.push_back(VideoWriter(files[j - 1], CV_FOURCC('M', 'J', 'P', 'G'), 30, Size(caps[j - 1].get(CV_CAP_PROP_FRAME_WIDTH), caps[j - 1].get(CV_CAP_PROP_FRAME_HEIGHT)), true));
+				writers.push_back(VideoWriter(files[j - 1], CV_FOURCC('a', 'v', 'c', '1'), 20, Size(caps[j - 1].get(CV_CAP_PROP_FRAME_WIDTH), caps[j - 1].get(CV_CAP_PROP_FRAME_HEIGHT)), true));
 				frames.push_back(Mat());
 			}
 		}
