@@ -28,10 +28,23 @@ int main(int arg_c, char** arg_v) {
 			record = true;
 		}
 		else if (strcmp(arg_v[i], "-c") == 0 && arg_c > ++i) {
-			for (int j = 0; j < atoi(arg_v[i++]); j++) {
-				caps.push_back(VideoCapture(atoi(arg_v[i + j])));
-				files.push_back("save" + to_string(j) + ".avi");
-				writers.push_back(VideoWriter(files[j], CV_FOURCC('M', 'J', 'P', 'G'), 30, Size(caps[j].get(CV_CAP_PROP_FRAME_WIDTH), caps[j].get(CV_CAP_PROP_FRAME_HEIGHT)), true));
+			for (int j = 1; j <= atoi(arg_v[i]); j++) {
+				cout << "Trying Cam " << arg_v[i + j] << "..." << endl;
+				VideoCapture cap(atoi(arg_v[i + j]));
+
+				cap.set(CV_CAP_PROP_FRAME_WIDTH, 850);
+				cap.set(CV_CAP_PROP_FRAME_HEIGHT, 480);
+
+				if (!cap.isOpened()) {
+					cout << "Failed to open camera " << arg_v[i + j] << endl;
+					continue;
+				}
+
+				cout << "Camera " << arg_v[i + j] << " opened successfully" << endl;
+
+				caps.push_back(cap);
+				files.push_back("save" + to_string(j - 1) + ".avi");
+				writers.push_back(VideoWriter(files[j - 1], CV_FOURCC('M', 'J', 'P', 'G'), 30, Size(caps[j - 1].get(CV_CAP_PROP_FRAME_WIDTH), caps[j - 1].get(CV_CAP_PROP_FRAME_HEIGHT)), true));
 				frames.push_back(Mat());
 			}
 		}
@@ -39,8 +52,6 @@ int main(int arg_c, char** arg_v) {
 			stream = true;
 		}
 	}
-
-	cout << caps.size() << endl;
 
 	while (true) {
 		for (int i = 0; i < caps.size(); i++) {
