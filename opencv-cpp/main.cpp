@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <vector>
@@ -31,9 +32,9 @@ int main(int arg_c, char** arg_v) {
             stream = true;
         }
         else if (strcmp(arg_v[i], "-c") == 0 && arg_c > ++i) {
-            for (int j = 1; j <= atoi(arg_v[i]); j++) {
+            for (int j = 1; j <= strtol(arg_v[i], nullptr, 0); j++) {
                 cout << "Trying Cam " << arg_v[i + j] << "..." << endl;
-                VideoCapture cap(atoi(arg_v[i + j]));
+                VideoCapture cap(strtol(arg_v[i + j], nullptr, 0));
 
                 cap.set(cv::CAP_PROP_FRAME_WIDTH, 850);
                 cap.set(cv::CAP_PROP_FRAME_HEIGHT, 480);
@@ -47,8 +48,8 @@ int main(int arg_c, char** arg_v) {
 
                 caps.push_back(cap);
                 files.push_back("save" + to_string(j - 1) + ".avi");
-                writers.push_back(VideoWriter(files[j - 1], VideoWriter::fourcc('a', 'v', 'c', '1'), 20, Size(caps[j - 1].get(cv::CAP_PROP_FRAME_WIDTH), caps[j - 1].get(cv::CAP_PROP_FRAME_HEIGHT)), true));
-                frames.push_back(Mat());
+                writers.emplace_back(files[j - 1], VideoWriter::fourcc('a', 'v', 'c', '1'), 20, Size(caps[j - 1].get(cv::CAP_PROP_FRAME_WIDTH), caps[j - 1].get(cv::CAP_PROP_FRAME_HEIGHT)), true);
+                frames.emplace_back();
             }
         }
     }
